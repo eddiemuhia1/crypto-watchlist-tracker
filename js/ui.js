@@ -8,10 +8,27 @@
     nameCell.textContent = coin.name;
 
     const priceCell = document.createElement("td")
-    priceCell.textContent = coin.current_price;
+    //Add the dollar sign infront of numbers
+    priceCell.textContent = coin.current_price.toLocaleString("en-US", { style: "currency", currency: "USD" });;
 
-    row.append(rankCell,nameCell, priceCell )
+    const changeCell = document.createElement("td");
+    changeCell.textContent = coin.price_change_percentage_24h.toFixed(2) + "%";
+    if (coin.price_change_percentage_24h >= 0) {
+    changeCell.classList.add("gain");
+    }
+    else {
+   changeCell.classList.add("loss");
+    }
+   
+    row.append(rankCell,nameCell, priceCell, changeCell )
 
     return row;
-
+}
+export function renderCoins(coins){
+    const tableBody = document.querySelector("#coin-table-body");
+    tableBody.replaceChildren();
+    coins.forEach((coin) => {
+        const row = createCoinRow(coin);
+        tableBody.append(row);     
+    });
 }
