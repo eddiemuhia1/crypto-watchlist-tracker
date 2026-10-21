@@ -1,5 +1,7 @@
  export function createCoinRow(coin){
     const row = document.createElement("tr");
+    //add data-id
+    row.dataset.id = coin.id;
 
     const rankCell = document.createElement("td");
     rankCell.textContent = coin.market_cap_rank;
@@ -31,4 +33,13 @@ export function renderCoins(coins){
         const row = createCoinRow(coin);
         tableBody.append(row);     
     });
+}
+//Add a status message area
+export function showStatus(message) {
+  const status = document.querySelector("#status-message");
+  status.textContent = message;
+}
+export function clearStatus() {
+  const status = document.querySelector("");
+  status.textContent = message;
 }
