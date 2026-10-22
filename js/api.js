@@ -1,6 +1,7 @@
 const API_URL =
   "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1";
 const BASE_URL = "https://api.coingecko.com/api/v3";
+const DB_URL = "http://localhost:3000/watchlist";
 
 export async function fetchTopCoins() {
  try {
@@ -40,5 +41,27 @@ export async function getCoinsByIds(ids) {
     return [];
   }
 }
-
-
+export async function getWatchlist(){
+  try{
+    const response = await fetch (DB_URL);
+    if(!response.ok) throw new Error (`Watchlist fetch failed; ${response.status}`);
+    return await response.json();
+  }
+  catch(error){
+    console.error("Error fetching watchlist", error);
+    return[];
+  }
+}
+//sends new data
+export async function addToWatchlist(coinData){
+  try {
+    const response = await fetch(DB_URL, {
+      method:"POST", headers: {"Content-Type":"application/json"},
+      body:JSON.stringify(coinData) });
+    if(!response.ok) throw new Error (`Failed to add coin: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding to watchlist",error);
+    return null;
+  }
+}
