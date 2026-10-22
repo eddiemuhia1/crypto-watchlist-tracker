@@ -65,3 +65,16 @@ export async function addToWatchlist(coinData){
     return null;
   }
 }
+//Add a delete request function
+export async function deleteFromWatchlist(id) {
+  try {
+    const response = await fetch(`${DB_URL}/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error(`Delete failed: ${response.status}`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting from watchlist:", error);
+    return false;
+  }
+}
