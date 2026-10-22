@@ -5,27 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Watchlist</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Reddit+Sans+Condensed:wght@200..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 <body>
-  <h1>Crypto Watchlist</h1>
-  <p id="status-message"></p>
-   <!--search bar -->
-    <form id="search-form" class="search-container">
+    <div class="app-card">
+     <header class="app-header">
+     <h1>Crypto Watchlist</h1>
+       <p id="status-message"></p>
+     </header>
+        <!--search bar -->
+     <form id="search-form" class="search-container">
         <input type="text" id="search-input" placeholder="Search by coin name (e.g., Bitcoin)" 
          autocomplete="off">
         <button type="submit" id="search-button">Search</button>
-    </form>
-    <table>
-     <thead>
+     </form>
+     <div class="table-wrapper">
+       <table>
+       <thead>
          <tr>
              <th>Rank</th>
               <th>Name</th>
               <th>Price (USD)</th>
              <th>24h Change</th>
          </tr>
-     </thead>
-     <tbody id="coin-table-body"></tbody>
-    </table>
+       </thead>
+       <tbody id="coin-table-body"></tbody>
+      </table>
+     </div>
+   </div> 
 
    <script src="js/main.js" type="module"></script>
 </body>
