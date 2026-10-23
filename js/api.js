@@ -66,17 +66,14 @@ export async function searchCoins(query) {
   }
 }
 
-export async function getCoinsByIds(ids) {
-  try {
-    const idsString = Array.isArray(ids) ? ids.join(',') : ids;
-    if (!idsString) return [];
-    
-    const response = await fetch(`${BASE_URL}/coins/markets?vs_currency=usd&ids=${encodeURIComponent(idsString)}`);
-    if (!response.ok) throw new Error(`Market fetch failed: ${response.status}`);
-    return await response.json();
+export async function fetchTrending() {
+  try {    
+    const response = await fetch(`${BASE_URL}/search/trending`);
+    if (!response.ok) throw new Error(`Trending fetch failed`);
+    const data = await response.json();
+return data.coins; 
   } catch (error) {
-    console.error("Error fetching market data:", error);
-    return [];
+        return [];
   }
 }
 export async function getWatchlist(){
