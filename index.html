@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Watchlist</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Reddit+Sans+Condensed:wght@200..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-card">
      <header class="app-header">
-     <h1>Crypto Watchlist</h1>
+     <h1>DipHunter</h1>
+<p>Set Your Price. Catch the Dip</p>
        <p id="status-message"></p>
      </header>
-        <!--search bar -->
+
+    <div class="controls-bar">
+      <div id="trending-strip"></div>
+      <select id="currency-toggle">
+        <option value="usd">USD ($USD)</option>
+        <option value="kes">KES (KSh)</option>
+      </select>
+    </div>
+
+        <!-- Search bar -->
      <form id="search-form" class="search-container">
-        <input type="text" id="search-input" placeholder="Search by coin name (e.g., Bitcoin)" 
-         autocomplete="off">
+        <input type="text" id="search-input" placeholder="Search by coin name (e.g., Bitcoin)" autocomplete="off">
         <button type="submit" id="search-button">Search</button>
      </form>
+
+    <!-- Top 10 coins -->
      <div class="table-wrapper">
        <table>
        <thead>
@@ -28,10 +40,76 @@
               <th>Name</th>
               <th>Price (USD)</th>
              <th>24h Change</th>
+<th>Action</th>
          </tr>
        </thead>
        <tbody id="coin-table-body"></tbody>
       </table>
+</div>
+
+    <!-- My Watchlist -->
+    <div class="watchlist-header">
+      <h2>My Watchlist</h2>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Live Price</th>
+            <th>Target Price</th>
+            <th>Note</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="watchlist-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Watchlist Modal (outside the card on purpose) -->
+  <div id="watchlist-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Add to Watchlist</h2>
+      <p id="modal-coin-name"></p>
+      <form id="watchlist-form">
+        <input type="hidden" id="modal-coin-id">
+        <input type="hidden" id="modal-coin-symbol">
+        <div class="input-group">
+          <label for="target-price">Target Buy Price (USD):</label>
+          <input type="number" id="target-price" step="0.0001" required>
+        </div>
+        <div class="input-group">
+          <label for="coin-note">Note (Optional):</label>
+          <input type="text" id="coin-note" placeholder="e.g., Buy the dip">
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" id="save-btn" class="action-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Edit Watchlist -->
+    <div id="edit-modal" class="modal hidden">
+      <div class="modal-content">
+         <h2>Edit Watchlist Item</h2>
+          <p id="edit-coin-name"></p>
+      <form id="edit-form">
+        <input type="hidden" id="edit-db-id">
+        <div class="input-group">
+          <label for="edit-target-price">Target Buy Price (USD):</label>
+          <input type="number" id="edit-target-price" step="0.0001" required>
+        </div>
+        <div class="input-group">
+          <label for="edit-note">Note (Optional):</label>
+          <input type="text" id="edit-note" placeholder="e.g., Buy the dip">
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="edit-cancel-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="action-btn">Save changes</button>
+        </div>
+      </form>
      </div>
    </div> 
 
