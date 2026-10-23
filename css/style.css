@@ -41,13 +41,17 @@ body {
   margin-bottom: 1rem;
 }
 #trending-strip{
-  color: var(--accent-glow);
-  font-weight: bold;
-  overflow: hidden; 
+  background-color: #161b22;
+  color: #00ffa3; 
+  padding: 12px 0;
+  overflow: hidden;
   white-space: nowrap;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #30363d;
 }
 #currency-toggle{
-  background: var(--input-bg);
+  background: var(--card-bg);
   color: white;
   border: 1px solid var(--card-border);
   padding: 0.5rem; border-radius: 4px;
@@ -342,12 +346,13 @@ td.loss {
     width: 100%;
   }
 }
-@keyframes scroll {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-.scrolling-text {
+
+ .scrolling-text {
   display: inline-block;
-  animation: scroll 15s linear infinite;
-  white-space: nowrap;
+  width: max-content; /* This forces it to stretch to the full text length */
+  animation: scroll-left 40s linear infinite; 
 }

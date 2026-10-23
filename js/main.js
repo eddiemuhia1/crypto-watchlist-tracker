@@ -11,19 +11,57 @@ currencyToggle.addEventListener("change", (e) => {
   loadWatchlist();
 });
 
-async function loadTrending() {
+/* async function loadTrending() {
   const trending = await fetchTrending();
   const top3 = trending.slice(0, 3).map(item => `${item.item.name} (${item.item.symbol})`).join(" 🔥 | ");
   trendingStrip.innerHTML = `<span class="scrolling-text">Trending Now: 🔥 ${top3}</span>`;
+} */
+/* async function loadTrending() {
+  const trending = await fetchTrending();
+  
+  // Take up to 8 trending coins
+  const topCoins = trending.slice(0, 8).map(item => {
+    const coin = item.item;
+    // Extract 24h price change percentage from market data if available
+    const change24h = coin.data && coin.data.price_change_percentage_24h 
+      ? coin.data.price_change_percentage_24h.usd.toFixed(2) 
+      : "0.00";
+    
+    const sign = change24h >= 0 ? "+" : "";
+    return `${coin.name} (${coin.symbol.toUpperCase()}): ${sign}${change24h}%`;
+  }).join("  |  ");
+  // Duplicate the string with a separator in between
+  const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
+  trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
+}
+ // trendingStrip.innerHTML = `<span class="scrolling-text">Trending Now: ${topCoins}</span>`;
+*/
+
+async function loadTrending() {
+  const trending = await fetchTrending();
+  
+  const topCoins = trending.slice(0, 8).map(item => {
+    const coin = item.item;
+    const change24h = coin.data && coin.data.price_change_percentage_24h 
+      ? coin.data.price_change_percentage_24h.usd.toFixed(2) 
+      : "0.00";
+    
+    const sign = change24h >= 0 ? "+" : "";
+    return `${coin.name} (${coin.symbol.toUpperCase()}): ${sign}${change24h}%`;
+  }).join("  |  ");
+
+  // Duplicate the string with a separator in between
+  const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
+  trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
 }
 
 loadTrending();
 
 async function loadCoins() {
-  showStatus("Loading...");  
+  showStatus("Loading...");
 
   try {
-  const coins = await fetchTopCoins(currentCurrency);
+    const coins = await fetchTopCoins(currentCurrency);
 
     if (coins.length === 0) {
       showStatus("Couldn't load prices. Check your connection and try again.");
@@ -31,8 +69,8 @@ async function loadCoins() {
     }
 
     renderCoins(coins, currentCurrency);
-  clearStatus();
-} catch (error) {
+    clearStatus();
+  } catch (error) {
     console.error("loadCoins failed:", error);
     showStatus("Something went wrong while showing the prices.");
   }
@@ -41,8 +79,8 @@ async function loadCoins() {
 loadCoins();
 loadWatchlist();
 
-const searchForm = document.querySelector("#search-form"); // Ensure this ID matches your HTML
-const searchInput = document.querySelector("#search-input"); // Ensure this ID matches your HTML
+const searchForm = document.querySelector("#search-form"); 
+const searchInput = document.querySelector("#search-input"); 
 const tableBody = document.querySelector("#coin-table-body"); 
 
 searchForm.addEventListener("submit", async (event) => {
@@ -59,7 +97,7 @@ searchForm.addEventListener("submit", async (event) => {
   const searchResults = await searchCoins(query);
   
   if (searchResults.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="4">No coins found</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="5">No coins found</td></tr>';
     clearStatus();
     return;
   }
@@ -71,7 +109,7 @@ searchForm.addEventListener("submit", async (event) => {
   if (marketData.length > 0) {
     renderCoins(marketData);
   } else {
-    tableBody.innerHTML = '<tr><td colspan="4">No prices found for these coins</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="5">No prices found for these coins</td></tr>';
   }
   
   clearStatus();
