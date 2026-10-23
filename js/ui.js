@@ -1,6 +1,6 @@
- export function createCoinRow(coin, currency = "usd"){
+export function createCoinRow(coin, currency = "usd"){
     const row = document.createElement("tr");
-        row.dataset.id = coin.id;
+    row.dataset.id = coin.id;
 
     const rankCell = document.createElement("td");
     rankCell.textContent = coin.market_cap_rank;
@@ -10,20 +10,20 @@
 
     const priceCell = document.createElement("td");
     priceCell.textContent = coin.current_price.toLocaleString("en-US", { 
-style: "currency", 
-currency: currency.toUpperCase() 
-});
+        style: "currency", 
+        currency: currency.toUpperCase() 
+    });
 
     const changeCell = document.createElement("td");
     const percentage = coin.price_change_percentage_24h || 0;
-     changeCell.textContent = percentage.toFixed(2) + "%";
+    changeCell.textContent = percentage.toFixed(2) + "%";
     if (percentage >= 0) {
-    changeCell.classList.add("gain");
+        changeCell.classList.add("gain");
     } else {
-   changeCell.classList.add("loss");
+        changeCell.classList.add("loss");
     }
-   
-const actionCell = document.createElement("td");
+
+    const actionCell = document.createElement("td");
     const addButton = document.createElement("button");
     addButton.textContent = "+ Add";
     addButton.className = "action-btn";
@@ -37,12 +37,11 @@ const actionCell = document.createElement("td");
 
     return row;
 }
-
 export function renderCoins(coins, currency = "usd"){
     const tableBody = document.querySelector("#coin-table-body");
     tableBody.replaceChildren();
     coins.forEach((coin) => {
-// Pass the currency down to the row creator
+        // Pass the currency down to the row creator
         const row = createCoinRow(coin, currency);
         tableBody.append(row);     
     });

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Watchlist</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DipHunter</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-card">
-     <header class="app-header">
-     <h1>DipHunter</h1>
-<p>Set Your Price. Catch the Dip</p>
-       <p id="status-message"></p>
-     </header>
-
+  <div class="app-card">
+    <header class="app-header">
+      <h1>DipHunter</h1>
+      <p>Set Your Price. Catch the Dip</p>
+      <p id="status-message"></p>
+    </header>
+    
     <div class="controls-bar">
       <div id="trending-strip"></div>
       <select id="currency-toggle">
@@ -25,27 +25,27 @@
       </select>
     </div>
 
-        <!-- Search bar -->
-     <form id="search-form" class="search-container">
-        <input type="text" id="search-input" placeholder="Search by coin name (e.g., Bitcoin)" autocomplete="off">
-        <button type="submit" id="search-button">Search</button>
-     </form>
+    <!-- Search bar -->
+    <form id="search-form" class="search-container">
+      <input type="text" id="search-input" placeholder="Search by coin name (e.g., Bitcoin)" autocomplete="off">
+      <button type="submit" id="search-button">Search</button>
+    </form>
 
     <!-- Top 10 coins -->
-     <div class="table-wrapper">
-       <table>
-       <thead>
-         <tr>
-             <th>Rank</th>
-              <th>Name</th>
-              <th>Price (USD)</th>
-             <th>24h Change</th>
-<th>Action</th>
-         </tr>
-       </thead>
-       <tbody id="coin-table-body"></tbody>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Price (USD)</th>
+            <th>24h Change</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="coin-table-body"></tbody>
       </table>
-</div>
+    </div>
 
     <!-- My Watchlist -->
     <div class="watchlist-header">
@@ -110,9 +110,9 @@
           <button type="submit" class="action-btn">Save changes</button>
         </div>
       </form>
-     </div>
-   </div> 
+      </div>
+    </div>
 
-   <script src="js/main.js" type="module"></script>
+  <script src="js/main.js" type="module"></script>
 </body>
 </html>
