@@ -11,7 +11,7 @@ currencyToggle.addEventListener("change", (e) => {
   loadWatchlist();
 });
 
-async function loadTrending() {
+/* async function loadTrending() {
   const trending = await fetchTrending();
   
   const topCoins = trending.slice(0, 8).map(item => {
@@ -27,7 +27,27 @@ async function loadTrending() {
   // Duplicate the string with a separator in between
   const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
   trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
+} */
+async function loadTrending() {
+  const trending = await fetchTrending();
+  const topCoins = trending.filter(item => {
+    const change = item.item.data && item.item.data.price_change_percentage_24h ? item.item.data.price_change_percentage_24h.usd : 0;
+  return change > 0;  
+  })
+  .sort((a,b) => {
+    const changeA = a.item.data.price_change_percentage_24h.usd;
+    const changeB = b.item.data.price_change_percentage_24h.usd;
+    return changeB - changeA;
+    }) 
+  .slice(0,10)
+  .map(item => {const coin = item.item; const change24h = coin.data.price_change_percentage_24h.usd.toFixed(2);
+     return `${coin.name} (${coin.symbol.toUpperCase()}): +${change24h}%`;
+    })
+  .join(" | ");
+  const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
+  trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
 }
+
 
 loadTrending();
 
