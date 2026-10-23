@@ -1,5 +1,3 @@
-const API_URL =
-  "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1";
 const BASE_URL = "https://api.coingecko.com/api/v3";
 const DB_URL = "http://localhost:3000/watchlist";
 
@@ -14,23 +12,23 @@ async function getKesMultiplier() {
 }
 
 export async function fetchTopCoins(currency = "usd") {
- try {
-// Always fetch markets in USD to avoid API rejections
+  try {
+    // Always fetch markets in USD to avoid API rejections
     const fetchCurrency = currency === "kes" ? "usd" : currency;
     const response = await fetch(`${BASE_URL}/coins/markets?vs_currency=${fetchCurrency}&order=market_cap_desc&per_page=10&page=1`);
-    if (!response.ok)        throw new Error(`Request failed: ${response.status}`);
-        const data = await response.json();
-    
+    if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+    const data = await response.json();
+
     // If user wants KES, multiply the USD prices by the exchange rate
     if (currency === "kes") {
       const kesRate = await getKesMultiplier();
       return data.map(coin => ({ ...coin, current_price: coin.current_price * kesRate }));
+    }
+    return data;
+  } catch (error) {
+    console.error("Could not fetch coins: ", error); 
+    return []; 
   } 
-return data;
-  }   catch (error) {
-   console.error("Could not fetch coins: ", error); 
-return []; 
-   } 
 }
 
 export async function getCoinsByIds(ids, currency = "usd") {
@@ -66,16 +64,19 @@ export async function searchCoins(query) {
   }
 }
 
+//fetches the trending coins and displays them in a strip
 export async function fetchTrending() {
-  try {    
+  try {
     const response = await fetch(`${BASE_URL}/search/trending`);
     if (!response.ok) throw new Error(`Trending fetch failed`);
     const data = await response.json();
-return data.coins; 
+    return data.coins; 
   } catch (error) {
-        return [];
+    console.error("Error fetching trending coins:", error);
+    return [];
   }
 }
+
 export async function getWatchlist(){
   try{
     const response = await fetch (DB_URL);
@@ -90,7 +91,7 @@ export async function getWatchlist(){
 //sends new data
 export async function addToWatchlist(coinData){
   try {
-    const response = await fetch(DB_URL, {
+    const response = await fetch((DB_URL), {
       method:"POST", headers: {"Content-Type":"application/json"},
       body:JSON.stringify(coinData) });
     if(!response.ok) throw new Error (`Failed to add coin: ${response.status}`);
