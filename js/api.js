@@ -76,8 +76,43 @@ export async function fetchTrending() {
     return [];
   }
 }
+// Fetch watchlist items from browser storage
+export async function getWatchlist() {
+  const items = localStorage.getItem("crypto_watchlist");
+  return items ? JSON.parse(items) : [];
+}
 
-export async function getWatchlist(){
+// Add new coin to browser storage
+export async function addToWatchlist(coinData) {
+  const watchlist = await getWatchlist();
+  // Ensure the coin has a unique ID, falling back to a timestamp
+  const newItem = { ...coinData, id: coinData.id || Date.now().toString() };
+  watchlist.push(newItem);
+  localStorage.setItem("crypto_watchlist", JSON.stringify(watchlist));
+  return newItem;
+}
+
+// Delete coin from browser storage
+export async function deleteFromWatchlist(id) {
+  const watchlist = await getWatchlist();
+  const updatedWatchlist = watchlist.filter(item => item.id !== id);
+  localStorage.setItem("crypto_watchlist", JSON.stringify(updatedWatchlist));
+  return true;
+}
+
+// Update target price or notes in browser storage
+export async function updateWatchlistItem(id, changes) {
+  const watchlist = await getWatchlist();
+  const index = watchlist.findIndex(item => item.id === id);
+  if (index !== -1) {
+    watchlist[index] = { ...watchlist[index], ...changes };
+    localStorage.setItem("crypto_watchlist", JSON.stringify(watchlist));
+    return watchlist[index];
+  }
+  return null;
+}
+
+/* export async function getWatchlist(){
   try{
     const response = await fetch (DB_URL);
     if(!response.ok) throw new Error (`Watchlist fetch failed; ${response.status}`);
@@ -127,7 +162,7 @@ export async function updateWatchlistItem(id, changes) {
     console.error("Error updating watchlist item:", error);
     return null;
   }
-}
+} */
 export async function updateTargetPrice(id, newTarget) {
   try {
     await fetch(`${DB_URL}/${id}`, {
