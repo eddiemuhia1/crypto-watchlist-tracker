@@ -13,19 +13,47 @@ async function getKesMultiplier() {
   return data.rates.kes.value / data.rates.usd.value;
 }
 
-export async function fetchTopCoins() {
+export async function fetchTopCoins(currency = "usd") {
  try {
-    const response = await fetch(API_URL)
-    if (!response.ok) {
-       throw new Error(`Request failed: ${response.status}`);
-    }
-    const coins = await response.json();
-    return coins;
+// Always fetch markets in USD to avoid API rejections
+    const fetchCurrency = currency === "kes" ? "usd" : currency;
+    const response = await fetch(`${BASE_URL}/coins/markets?vs_currency=${fetchCurrency}&order=market_cap_desc&per_page=10&page=1`);
+    if (!response.ok)        throw new Error(`Request failed: ${response.status}`);
+        const data = await response.json();
+    
+    // If user wants KES, multiply the USD prices by the exchange rate
+    if (currency === "kes") {
+      const kesRate = await getKesMultiplier();
+      return data.map(coin => ({ ...coin, current_price: coin.current_price * kesRate }));
   } 
-  catch (error) {
+return data;
+  }   catch (error) {
    console.error("Could not fetch coins: ", error); 
+return []; 
    } 
 }
+
+export async function getCoinsByIds(ids, currency = "usd") {
+  try {
+    const idsString = Array.isArray(ids) ? ids.join(',') : ids;
+    if (!idsString) return [];
+    
+    const fetchCurrency = currency === "kes" ? "usd" : currency;
+    const response = await fetch(`${BASE_URL}/coins/markets?vs_currency=${fetchCurrency}&ids=${encodeURIComponent(idsString)}`);
+    if (!response.ok) throw new Error(`Market fetch failed: ${response.status}`);
+    const data = await response.json();
+
+    if (currency === "kes") {
+      const kesRate = await getKesMultiplier();
+      return data.map(coin => ({ ...coin, current_price: coin.current_price * kesRate }));
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching market data:", error);
+    return [];
+  }
+}
+
 export async function searchCoins(query) {
   try {
     const response = await fetch(`${BASE_URL}/search?query=${encodeURIComponent(query)}`);
