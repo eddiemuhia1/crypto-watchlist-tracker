@@ -35,7 +35,23 @@ body {
   align-items: center;
   padding: 2rem 1rem;
 }
-
+.controls-bar{
+  display: flex; 
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+#trending-strip{
+  color: var(--accent-glow);
+  font-weight: bold;
+  overflow: hidden; 
+  white-space: nowrap;
+}
+#currency-toggle{
+  background: var(--input-bg);
+  color: white;
+  border: 1px solid var(--card-border);
+  padding: 0.5rem; border-radius: 4px;
+}
 /* Glassmorphism Outer Card */
 .app-card {
   width: 100%;
