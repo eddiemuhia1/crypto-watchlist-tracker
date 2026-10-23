@@ -113,3 +113,28 @@ export async function deleteFromWatchlist(id) {
     return false;
   }
 }
+export async function updateWatchlistItem(id, changes) {
+  try {
+    const response = await fetch(`${DB_URL}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(changes),
+    });
+    if (!response.ok) throw new Error(`Update failed: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating watchlist item:", error);
+    return null;
+  }
+}
+export async function updateTargetPrice(id, newTarget) {
+  try {
+    await fetch(`${DB_URL}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ targetPrice: Number(newTarget) })
+    });
+  } catch (error) {
+    console.error("Failed to update target price", error);
+  }
+}
