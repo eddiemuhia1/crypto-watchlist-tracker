@@ -1,17 +1,18 @@
- export function createCoinRow(coin){
+ export function createCoinRow(coin, currency = "usd"){
     const row = document.createElement("tr");
-    //add data-id
-    row.dataset.id = coin.id;
+        row.dataset.id = coin.id;
 
     const rankCell = document.createElement("td");
     rankCell.textContent = coin.market_cap_rank;
 
     const nameCell = document.createElement("td");
-    nameCell.textContent = coin.name;
+    nameCell.textContent = `${coin.name} (${coin.symbol.toUpperCase()})`;
 
-    const priceCell = document.createElement("td")
-    //Add the dollar sign infront of numbers
-    priceCell.textContent = coin.current_price.toLocaleString("en-US", { style: "currency", currency: "USD" });;
+    const priceCell = document.createElement("td");
+    priceCell.textContent = coin.current_price.toLocaleString("en-US", { 
+style: "currency", 
+currency: currency.toUpperCase() 
+});;
 
     const changeCell = document.createElement("td");
     const percentage = coin.price_change_percentage_24h || 0;
@@ -22,7 +23,17 @@
    changeCell.classList.add("loss");
     }
    
-    row.append(rankCell,nameCell, priceCell, changeCell )
+const actionCell = document.createElement("td");
+    const addButton = document.createElement("button");
+    addButton.textContent = "+ Add";
+    addButton.className = "action-btn";
+    
+    addButton.dataset.id = coin.id;
+    addButton.dataset.name = coin.name;
+    addButton.dataset.symbol = coin.symbol;
+    
+    actionCell.append(addButton);
+    row.append(rankCell, nameCell, priceCell, changeCell, actionCell);
 
     return row;
 }
