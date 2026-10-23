@@ -3,6 +3,16 @@ const API_URL =
 const BASE_URL = "https://api.coingecko.com/api/v3";
 const DB_URL = "http://localhost:3000/watchlist";
 
+//run jsob by: npx json-server --watch db.json --port 3000
+
+// Helper function to get the live USD to KES conversion rate
+async function getKesMultiplier() {
+  const res = await fetch(`${BASE_URL}/exchange_rates`);
+  const data = await res.json();
+  // Divide KES rate by USD rate to get the multiplier
+  return data.rates.kes.value / data.rates.usd.value;
+}
+
 export async function fetchTopCoins() {
  try {
     const response = await fetch(API_URL)
