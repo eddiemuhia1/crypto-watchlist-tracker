@@ -1,14 +1,45 @@
-import { fetchTopCoins,  searchCoins, getCoinsByIds } from "./api.js";
-import { renderCoins, clearStatus, showStatus } from "./ui.js";
+import { fetchTopCoins, searchCoins, getCoinsByIds, addToWatchlist, deleteFromWatchlist, getWatchlist, fetchTrending, updateWatchlistItem } from "./api.js";
+import { renderCoins, clearStatus, showStatus, renderWatchlist } from "./ui.js";
+
+let currentCurrency = "usd";
+const currencyToggle = document.querySelector("#currency-toggle");
+const trendingStrip = document.querySelector("#trending-strip");
+
+currencyToggle.addEventListener("change", (e) => {
+  currentCurrency = e.target.value;
+  loadCoins();
+  loadWatchlist();
+});
+
+async function loadTrending() {
+  const trending = await fetchTrending();
+  const top3 = trending.slice(0, 3).map(item => `${item.item.name} (${item.item.symbol})`).join(" 🔥 | ");
+  trendingStrip.innerHTML = `<span class="scrolling-text">Trending Now: 🔥 ${top3}</span>`;
+}
+
+loadTrending();
 
 async function loadCoins() {
   showStatus("Loading...");  
-  const coins = await fetchTopCoins();
-  renderCoins(coins);
+
+  try {
+  const coins = await fetchTopCoins(currentCurrency);
+
+    if (coins.length === 0) {
+      showStatus("Couldn't load prices. Check your connection and try again.");
+      return;
+    }
+
+    renderCoins(coins, currentCurrency);
   clearStatus();
+} catch (error) {
+    console.error("loadCoins failed:", error);
+    showStatus("Something went wrong while showing the prices.");
+  }
 }
 
 loadCoins();
+loadWatchlist();
 
 const searchForm = document.querySelector("#search-form"); // Ensure this ID matches your HTML
 const searchInput = document.querySelector("#search-input"); // Ensure this ID matches your HTML
