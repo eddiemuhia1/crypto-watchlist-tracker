@@ -12,14 +12,14 @@
     priceCell.textContent = coin.current_price.toLocaleString("en-US", { 
 style: "currency", 
 currency: currency.toUpperCase() 
-});;
+});
 
     const changeCell = document.createElement("td");
     const percentage = coin.price_change_percentage_24h || 0;
      changeCell.textContent = percentage.toFixed(2) + "%";
     if (percentage >= 0) {
     changeCell.classList.add("gain");
-    }     else {
+    } else {
    changeCell.classList.add("loss");
     }
    
