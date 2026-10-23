@@ -11,32 +11,6 @@ currencyToggle.addEventListener("change", (e) => {
   loadWatchlist();
 });
 
-/* async function loadTrending() {
-  const trending = await fetchTrending();
-  const top3 = trending.slice(0, 3).map(item => `${item.item.name} (${item.item.symbol})`).join(" 🔥 | ");
-  trendingStrip.innerHTML = `<span class="scrolling-text">Trending Now: 🔥 ${top3}</span>`;
-} */
-/* async function loadTrending() {
-  const trending = await fetchTrending();
-  
-  // Take up to 8 trending coins
-  const topCoins = trending.slice(0, 8).map(item => {
-    const coin = item.item;
-    // Extract 24h price change percentage from market data if available
-    const change24h = coin.data && coin.data.price_change_percentage_24h 
-      ? coin.data.price_change_percentage_24h.usd.toFixed(2) 
-      : "0.00";
-    
-    const sign = change24h >= 0 ? "+" : "";
-    return `${coin.name} (${coin.symbol.toUpperCase()}): ${sign}${change24h}%`;
-  }).join("  |  ");
-  // Duplicate the string with a separator in between
-  const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
-  trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
-}
- // trendingStrip.innerHTML = `<span class="scrolling-text">Trending Now: ${topCoins}</span>`;
-*/
-
 async function loadTrending() {
   const trending = await fetchTrending();
   
@@ -162,7 +136,6 @@ watchListForm.addEventListener("submit", async (event) => {
   const savedItem = await addToWatchlist(newWatchlistItem);
   
   if (savedItem) {
-    alert(`${newWatchlistItem.name} added to your watchlist!`);
     loadWatchlist()
   }
   
