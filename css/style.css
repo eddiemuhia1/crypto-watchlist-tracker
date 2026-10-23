@@ -204,10 +204,12 @@ td.loss {
     width: 100%;
   }
 }
-/*.gain {
-  color: #22c55e;
+@keyframes scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
-
-.loss {
-  color: #ef4444;
-} */
+.scrolling-text {
+  display: inline-block;
+  animation: scroll 15s linear infinite;
+  white-space: nowrap;
+}
