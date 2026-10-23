@@ -76,6 +76,139 @@ searchForm.addEventListener("submit", async (event) => {
   
   clearStatus();
 });
+const modal = document.querySelector("#watchlist-modal")
+const modalCoinName = document.querySelector("#modal-coin-name")
+const modalCoinId = document.querySelector("#modal-coin-id")
+const modalCoinSymbol = document.querySelector("#modal-coin-symbol")
+const watchListForm = document.querySelector("#watchlist-form")
+const cancelBtn = document.querySelector("#cancel-btn")
+
+tableBody.addEventListener("click", (event) => {
+  if (event.target.classList.contains("action-btn")) {
+    const btn = event.target;
+    
+    // Populate hidden inputs and header with the clicked coin's data
+    modalCoinId.value = btn.dataset.id;
+    modalCoinSymbol.value = btn.dataset.symbol;
+    modalCoinName.textContent = btn.dataset.name;
+    
+    // Show the modal by removing the 'hidden' class
+    modal.classList.remove("hidden");
+  }
+});
+
+// Close modal on cancel
+cancelBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  watchListForm.reset(); // Clear input fields
+});
+
+// Handle form submission 
+watchListForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  
+  const targetPrice = document.querySelector("#target-price").value;
+  const note = document.querySelector("#coin-note").value;
+  
+  // Construct the object expected by your json-server
+  const newWatchlistItem = {
+    coinId: modalCoinId.value,
+    name: modalCoinName.textContent,
+    symbol: modalCoinSymbol.value,
+    targetPrice: parseFloat(targetPrice),
+    note: note
+  };
+  
+  showStatus("Saving to watchlist...");
+  
+  const savedItem = await addToWatchlist(newWatchlistItem);
+  
+  if (savedItem) {
+    alert(`${newWatchlistItem.name} added to your watchlist!`);
+    loadWatchlist()
+  }
+  
+  // Close and clean up
+  modal.classList.add("hidden");
+  watchListForm.reset();
+  clearStatus();
+});
+const watchlistTableBody = document.querySelector("#watchlist-table-body");
 
 
+async function loadWatchlist() {
+  const watchlistItems = await getWatchlist();
+  
+  if (watchlistItems.length === 0) {
+    renderWatchlist([], [], currentCurrency);
+    return;
+  }
+  const coinIds = watchlistItems.map(item => item.coinId);
+  
+  // Fetch live prices for those specific saved coins
+  const liveMarketData = await getCoinsByIds(coinIds, currentCurrency);
+  
+  // Render the table with both local db data and live CoinGecko data
+  renderWatchlist(watchlistItems, liveMarketData, currentCurrency);
+}
 
+// ---- Edit modal ----
+const editModal = document.querySelector("#edit-modal");
+const editForm = document.querySelector("#edit-form");
+const editDbId = document.querySelector("#edit-db-id");
+const editCoinName = document.querySelector("#edit-coin-name");
+const editTargetPrice = document.querySelector("#edit-target-price");
+const editNote = document.querySelector("#edit-note");
+const editCancelBtn = document.querySelector("#edit-cancel-btn");
+
+// One click listener for both Edit and Remove buttons (event delegation)
+watchlistTableBody.addEventListener("click", async (event) => {
+  const btn = event.target;
+
+  if (btn.classList.contains("btn-edit")) {
+    editDbId.value = btn.dataset.dbId;
+    editCoinName.textContent = btn.dataset.name;
+    editTargetPrice.value = btn.dataset.targetPrice;
+    editNote.value = btn.dataset.note;
+    editModal.classList.remove("hidden");
+    return;
+  }
+
+  if (btn.classList.contains("btn-delete")) {
+    const dbId = btn.dataset.dbId;
+    btn.closest("tr").remove();
+
+    const success = await deleteFromWatchlist(dbId);
+    if (!success) {
+      alert("Failed to delete item from database.");
+      loadWatchlist();
+    }
+  }
+});
+
+editCancelBtn.addEventListener("click", () => {
+  editModal.classList.add("hidden");
+  editForm.reset();
+});
+
+editForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const changes = {
+    targetPrice: parseFloat(editTargetPrice.value),
+    note: editNote.value.trim()
+  };
+
+  showStatus("Saving changes...");
+  const updated = await updateWatchlistItem(editDbId.value, changes);
+
+  if (updated) {
+    await loadWatchlist();
+  } else {
+    alert("Could not save your changes. Is json-server running?");
+  }
+
+  editModal.classList.add("hidden");
+  editForm.reset();
+  clearStatus();
+});
