@@ -11,23 +11,8 @@ currencyToggle.addEventListener("change", (e) => {
   loadWatchlist();
 });
 
-/* async function loadTrending() {
-  const trending = await fetchTrending();
-  
-  const topCoins = trending.slice(0, 8).map(item => {
-    const coin = item.item;
-    const change24h = coin.data && coin.data.price_change_percentage_24h 
-      ? coin.data.price_change_percentage_24h.usd.toFixed(2) 
-      : "0.00";
-    
-    const sign = change24h >= 0 ? "+" : "";
-    return `${coin.name} (${coin.symbol.toUpperCase()}): ${sign}${change24h}%`;
-  }).join("  |  ");
+const lastUpdatedText = document.querySelector("#lastUpdated")
 
-  // Duplicate the string with a separator in between
-  const fullText = `Trending Now: ${topCoins} \u00A0\u00A0|\u00A0\u00A0 `;
-  trendingStrip.innerHTML = `<span class="scrolling-text">${fullText} ${fullText}</span>`;
-} */
 async function loadTrending() {
   const trending = await fetchTrending();
   const topCoins = trending.filter(item => {
@@ -243,3 +228,14 @@ editForm.addEventListener("submit", async (event) => {
   editForm.reset();
   clearStatus();
 });
+
+// Auto-refresh market data every 60 seconds
+setInterval(() => {
+  loadTrending();
+  loadCoins();
+  loadWatchlist();
+  if (lastUpdatedText) {
+    const now = new Date();
+    lastUpdatedText.textContent = `Last updated: ${now.toLocaleTimeString()}`;
+  }
+}, 60000);

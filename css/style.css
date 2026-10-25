@@ -56,6 +56,11 @@ body {
   border: 1px solid var(--card-border);
   padding: 0.5rem; border-radius: 4px;
 }
+#lastUpdated{
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  text-align: right;
+}
 /* Glassmorphism Outer Card */
 .app-card {
   width: 100%;
